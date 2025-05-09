@@ -1,6 +1,10 @@
+"use client";
+
 import Head from 'next/head';
 import Image from 'next/image';
 import Script from 'next/script';
+import React from 'react';
+import ClipsSection from '../components/ClipsSection';
 
 const SocialIcon = ({ href, label, children }: { href: string; label: string; children: React.ReactNode }) => (
   <a
@@ -15,9 +19,12 @@ const SocialIcon = ({ href, label, children }: { href: string; label: string; ch
 );
 
 export default function HomePage() {
+  const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
   const comedianName = "Thomas Endashaw";
   const tagline = "Finding the humor in the darkness.";
-  const bio = `Meet ${comedianName}, a senior at the University of Southern California majoring in Business of Cinematic Arts, who's
+  const bio = `Meet ${comedianName.split(' ')[0]}, a senior at the University of Southern California majoring in Business of Cinematic Arts, who's
   never far from a snack and somehow always manages to be both well-fed and
   hungry. Born and raised in Seattle, he brought his appetite to LA's comedy
   scene, where he now serves jokes—and devours post-show street tacos—as the
@@ -28,20 +35,21 @@ export default function HomePage() {
   If laughter is the best medicine, Thomas proves it works better with fries on
   the side.`;
 
-  const shortFormVideos = [
-    { id: "1", title: "Funny Clip 1", src: "/clips/SnapInsta.to_AQPz6JqWf_Ed-gwzxc9k0KEN1NJcHutZw7Q4HE8NRh7ql87wn06EpKAoWqQsYqOE6glNg8Xn9a3GRuDJnxhLAUujFvPxf5h0OUkQics.mp4"},
-    { id: "2", title: "Hilarious Moment", src: "/clips/SnapInsta.to_AQP_vBEFxrl1GIiaBOKiHUuhh4S0itYx6h34dqoYTqnipjdWCpkN_SHRHLlgNYZy9VjJez7AmBeuTZPbSRfeXeGGCzRodsR9s6o0so0.mp4" },
-    { id: "3", title: "Standup Bit", src: "/clips/SnapInsta.to_AQPAsUvRKrDMpxx24B6hO3YKk1iTvggPu4wFRoUQ8KtdVG5-bkOayNa0HyO0WJWndl3wHQhVtapI-BzJF_ba80tGjUpwhlTb_8KCcSk.mp4" },
-    { id: "5", title: "Joke of the Day", src: "/clips/SnapInsta.to_AQMe4ITnuPOmsXRZE4xMaRZyVj8G-b2ysBqZoTnQFvIG4V0RKHDh-aqWUFQrVulZgXhBbRmwVs2fiJMKzxbMRzgevbG2BhIJelm_MkY.mp4" },
-    { id: "6", title: "Joke of the Day", src: "/clips/SnapInsta.to_AQM3ouCg25fOsLoUSxP3irFKX9VXjXkBZEv4Ur3SAnvcuEzylSMzjsOMv48t4BiiqSWV5jWWLNYMJHi1OBwkxYAiJWb4b202FTmATSY.mp4" },
-    { id: "4", title: "Another Reel", src: "/clips/SnapInsta.to_AQP-T5uunFE11-0NBg5QZz7xsbVbGPHmsiIDVfLyUN3EQgWnGBAgaFCR4mOzg-w5I8BId3yMlmv6iT5iPwVLLT31kuQJu69K3lPDbt0.mp4" },
-  ];
-
   const upcomingShows = [
     { date: "May 31, 2025", venue: "Gumbo Gulch", city: "Los Angeles", tickets: "#" },
     { date: "November 15, 2025", venue: "Lasagna Landing", city: "New York City", tickets: "#" },
     { date: "December 5, 2025", venue: "Burger Basin", city: "Seattle", tickets: "#" },
   ];
+
+  const openModal = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -57,7 +65,7 @@ export default function HomePage() {
       <div className="min-h-screen bg-black text-white font-['Roboto_Slab',_serif] flex flex-col">
 
         {/* Header/Navigation (optional, can be simple) */}
-        <header className="py-6 px-4 md:px-8 shadow-md shadow-neutral-700 sticky top-0 bg-black bg-opacity-80 backdrop-blur-md z-50">
+        <header className="py-6 px-4 md:px-8 sticky top-0 bg-black z-50">
           <div className="container mx-auto flex justify-between items-center">
             <h1 className="text-3xl md:text-4xl font-bold tracking-wider">{comedianName}</h1>
             <nav className="space-x-4">
@@ -71,7 +79,7 @@ export default function HomePage() {
         {/* Hero Section */}
         <section
           id="hero"
-          className="flex-grow flex flex-col items-center justify-center text-center py-20 px-4 relative"
+          className="flex-grow flex flex-col items-center justify-center text-center pt-10 pb-20 px-4 relative"
           style={{
             // Optional: Add a very subtle noise texture or a desaturated city skyline for a more noir feel
             // backgroundImage: "url('/path-to-subtle-noise-texture.png')",
@@ -83,6 +91,7 @@ export default function HomePage() {
               alt="Thomas Endashaw"
               layout="fill"
               objectFit="cover"
+              objectPosition="center 12%"
               className="pointer-events-none" // Prevents image from interfering with text selection
             />
           </div>
@@ -103,53 +112,28 @@ export default function HomePage() {
         </section>
 
         {/* About Section */}
-        <section id="about-me" className="py-16 md:py-24 bg-black px-4">
+        <section id="about-me" className="py-8 md:py-12 bg-black px-4">
           <div className="container mx-auto max-w-3xl text-center">
-            <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white">About Me</h3>
+            <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">About Me</h3>
             <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">
               {bio}
             </p>
           </div>
         </section>
 
-        {/* Clips Section*/}
-        <section id="clips" className="py-16 md:py-24 bg-neutral-950 px-4">
-          <div className="container mx-auto max-w-full">
-            <h3 className="text-3xl md:text-4xl font-bold mb-12 text-center text-white">Clips</h3>
-            <div className="flex overflow-x-auto space-x-2 pb-4 custom-horizontal-scrollbar">
-              {shortFormVideos.map((video) => (
-                <div key={video.id} className="flex-none w-72 md:w-80 h-96 md:h-[500px] rounded-lg shadow-lg overflow-hidden isolate">
-                  <video
-                    src={video.src}
-                    width="100%"
-                    height="100%"
-                    controls
-                    controlsList="nofullscreen"
-                    className="object-contain w-full h-full"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              ))}
-            </div>
-            {shortFormVideos.length === 0 && (
-              <p className="text-center text-neutral-500 text-lg">
-                No short clips right now, probably busy eating.
-              </p>
-            )}
-          </div>
-        </section>
+        {/* Clips Section - replaced with the new component */}
+        <ClipsSection />
 
         {/* Shows Section */}
-        <section id="shows" className="py-16 md:py-24 bg-black px-4">
+        <section id="shows" className="py-8 md:py-12 bg-black px-4">
           <div className="container mx-auto max-w-4xl">
-            <h3 className="text-3xl md:text-4xl font-bold mb-12 text-center text-white">Catch Me If You Can</h3>
-            <div className="space-y-8">
+            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center text-white">Catch Me If You Can</h3>
+            <div className="space-y-4">
               {upcomingShows.length > 0 ? (
                 upcomingShows.map((show, index) => (
                   <div
                     key={index}
-                    className="bg-neutral-900 p-6 rounded-lg shadow-lg flex flex-col md:flex-row justify-between items-center transition-all duration-300 hover:shadow-neutral-600/50 hover:scale-[1.02]"
+                    className="bg-black p-6 rounded-lg shadow-lg flex flex-col md:flex-row justify-between items-center transition-all duration-300"
                   >
                     <div>
                       <p className="text-xl font-semibold text-white">{show.date}</p>
@@ -176,12 +160,12 @@ export default function HomePage() {
         </section>
 
         {/* Photo Gallery Section */}
-        <section id="gallery" className="py-16 md:py-24 bg-neutral-900 px-4">
+        <section id="gallery" className="py-8 md:py-12 bg-black px-4">
           <div className="container mx-auto max-w-5xl text-center">
-            <h3 className="text-3xl md:text-4xl font-bold mb-12 text-white">Gallery</h3>
+            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white">Gallery</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 items-center">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="overflow-hidden group transition-all duration-300">
+                <div key={i} className="overflow-hidden group transition-all duration-300 cursor-pointer" onClick={() => openModal(`/${i}.png`)}>
                   <Image
                     src={`/${i}.png`}
                     alt={`Gallery image ${i}`}
@@ -200,10 +184,10 @@ export default function HomePage() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-16 md:py-24 bg-black px-4">
+        <section id="contact" className="py-8 md:py-12 bg-black px-4">
           <div className="container mx-auto max-w-2xl text-center">
-            <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white">Connect with Me</h3>
-            <p className="text-lg text-neutral-400 mb-8">
+            <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">Connect with Me</h3>
+            <p className="text-lg text-neutral-400 mb-4">
               Keep up with me as I continue on 600 pound journey.
             </p>
             <div className="flex justify-center items-center space-x-6 text-3xl">
@@ -221,13 +205,43 @@ export default function HomePage() {
         </section>
 
         {/* Footer */}
-        <footer className="py-8 text-center bg-black border-t border-neutral-700">
+        <footer className="py-4 text-center bg-black border-t border-neutral-700">
           <p className="text-neutral-500">
             &copy; {new Date().getFullYear()} {comedianName}. All rights reserved.
             Beware of imitations.
           </p>
         </footer>
 
+        {/* Modal for Full Image View */}
+        {isModalOpen && selectedImage && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-[100]"
+            onClick={closeModal}
+          >
+            <div 
+              className="relative flex justify-center items-center max-w-[80vw] max-h-[80vh]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={selectedImage}
+                alt="Enlarged gallery image"
+                width={1920}
+                height={1080}
+                objectFit="contain"
+                className="rounded-md"
+              />
+              <button
+                onClick={closeModal}
+                className="absolute top-1 right-1 md:top-2 md:right-2 text-white bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-75 transition-all duration-200 focus:outline-none"
+                aria-label="Close image view"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
