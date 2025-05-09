@@ -61,7 +61,7 @@ export default function HomePage() {
           <div className="container mx-auto flex justify-between items-center">
             <h1 className="text-3xl md:text-4xl font-bold tracking-wider">{comedianName}</h1>
             <nav className="space-x-4">
-              <a href="#about" className="hover:text-neutral-300 transition-colors">About</a>
+              <a href="#about-me" className="hover:text-neutral-300 transition-colors">About</a>
               <a href="#shows" className="hover:text-neutral-300 transition-colors">Shows</a>
               <a href="#contact" className="hover:text-neutral-300 transition-colors">Contact</a>
             </nav>
@@ -116,15 +116,16 @@ export default function HomePage() {
         <section id="clips" className="py-16 md:py-24 bg-neutral-950 px-4">
           <div className="container mx-auto max-w-full">
             <h3 className="text-3xl md:text-4xl font-bold mb-12 text-center text-white">Clips</h3>
-            <div className="flex overflow-x-auto space-x-6 pb-4 custom-horizontal-scrollbar">
+            <div className="flex overflow-x-auto space-x-2 pb-4 custom-horizontal-scrollbar">
               {shortFormVideos.map((video) => (
-                <div key={video.id} className="flex-none w-72 md:w-80 h-96 md:h-[500px] bg-neutral-900 rounded-lg shadow-lg overflow-hidden">
+                <div key={video.id} className="flex-none w-72 md:w-80 h-96 md:h-[500px] rounded-lg shadow-lg overflow-hidden isolate">
                   <video
                     src={video.src}
                     width="100%"
                     height="100%"
                     controls
-                    className="object-cover w-full h-full"
+                    controlsList="nofullscreen"
+                    className="object-contain w-full h-full"
                   >
                     Your browser does not support the video tag.
                   </video>
