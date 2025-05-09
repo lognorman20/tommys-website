@@ -128,7 +128,7 @@ export default function HomePage() {
       <Head>
         <title>{comedianName} - Comedian</title>
         <meta name="description" content={`${comedianName} - ${tagline}`} />
-        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="icon" href="/logo.PNG" type="image/PNG" />
         {/* Using a Google Font that fits the noir style - consider 'Roboto Slab' or 'Merriweather' */}
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet" />
       </Head>
@@ -154,12 +154,12 @@ export default function HomePage() {
           className="flex-grow flex flex-col items-center justify-center text-center pt-10 pb-20 px-4 relative"
           style={{
             // Optional: Add a very subtle noise texture or a desaturated city skyline for a more noir feel
-            // backgroundImage: "url('/path-to-subtle-noise-texture.png')",
+            // backgroundImage: "url('/path-to-subtle-noise-texture.PNG')",
           }}
         >
           <div className="absolute inset-0 z-0 opacity-30"> {/* Image container */}
             <Image
-              src="/hero.png" // Placeholder image path
+              src="/hero.PNG" // Placeholder image path
               alt="Thomas Endashaw"
               layout="fill"
               objectFit="cover"
@@ -237,9 +237,9 @@ export default function HomePage() {
             <h3 className="text-3xl md:text-4xl font-bold mb-6 text-white">Gallery</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 items-center">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="overflow-hidden group transition-all duration-300 cursor-pointer" onClick={() => openModal(`/${i}.png`)}>
+                <div key={i} className="overflow-hidden group transition-all duration-300 cursor-pointer" onClick={() => openModal(`/${i}.PNG`)}>
                   <Image
-                    src={`/${i}.png`}
+                    src={`/${i}.PNG`}
                     alt={`Gallery image ${i}`}
                     layout="intrinsic"
                     width={1920}
