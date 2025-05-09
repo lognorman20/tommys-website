@@ -22,7 +22,16 @@ export default function HomePage() {
   // Placeholder data - replace with actual comedian info
   const comedianName = "Thomas Endashaw";
   const tagline = "Finding the humor in the darkness.";
-  const bio = `Meet ${comedianName}, a senior at USC studying business with a sharp wit and an even sharper appetite. Originally from Seattle, he brings a laid-back charm to the chaos of LA’s comedy scene, where he holds the title of youngest door guy at the iconic Comedy Store. A devoted follower of Jesus Christ, he balances his faith with punchlines that land just right. When he’s not cracking jokes, he’s probably eating—again—and if you’ve got food, you’ve already won him over.`;
+  const bio = `Meet ${comedianName}, a senior at USC studying business, who's
+  never far from a snack and somehow always manages to be both well-fed and
+  hungry. Born and raised in Seattle, he brought his appetite to LA's comedy
+  scene, where he now serves jokes—and devours post-show street tacos—as the
+  youngest door guy at the Comedy Store. A follower of Jesus Christ, Thomas
+  blends his faith with humor the same way he mixes cuisines: daily and in
+  large portions. Mid-punchline, he's probably thinking about his next
+  meal, and his friends know that any hangout with him requires at least a 50 piece box of wings.
+  If laughter is the best medicine, Thomas proves it works better with fries on
+  the side.`;
 
   const upcomingShows = [
     { date: "May 31, 2025", venue: "Gumbo Gulch", city: "Los Angeles", tickets: "#" },
@@ -48,7 +57,7 @@ export default function HomePage() {
           <div className="container mx-auto flex justify-between items-center">
             <h1 className="text-3xl md:text-4xl font-bold tracking-wider">{comedianName}</h1>
             <nav className="space-x-4">
-              <a href="#about-me" className="hover:text-neutral-300 transition-colors">About Me</a>
+              <a href="#about" className="hover:text-neutral-300 transition-colors">About</a>
               <a href="#shows" className="hover:text-neutral-300 transition-colors">Shows</a>
               <a href="#contact" className="hover:text-neutral-300 transition-colors">Contact</a>
             </nav>
@@ -141,13 +150,13 @@ export default function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {/* Placeholder for gallery images - replace with actual images */}
               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                <div key={i} className="bg-neutral-800 aspect-square rounded-lg shadow-lg overflow-hidden group transition-all duration-300 hover:shadow-neutral-500/50">
+                <div key={i} className="overflow-hidden group transition-all duration-300">
                   <Image
-                    src={`/images/gallery/photo-${i}.jpg`} // Placeholder image path
+                    src={`/${i}.png`}
                     alt={`Gallery image ${i}`}
-                    width={400}
-                    height={400}
-                    objectFit="cover"
+                    layout="intrinsic"
+                    width={1920} // Representative large width for aspect ratio hint
+                    height={1080} // Representative large height for aspect ratio hint
                     className="group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
