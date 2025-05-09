@@ -21,6 +21,7 @@ const SocialIcon = ({ href, label, children }: { href: string; label: string; ch
 export default function HomePage() {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [upcomingShows, setUpcomingShows] = React.useState<Array<{ date: string; venue: string; city: string; tickets: string }>>([]);
 
   const comedianName = "Thomas Endashaw";
   const tagline = "Finding the humor in the darkness.";
@@ -35,11 +36,82 @@ export default function HomePage() {
   If laughter is the best medicine, Thomas proves it works better with fries on
   the side.`;
 
-  const upcomingShows = [
-    { date: "May 31, 2025", venue: "Gumbo Gulch", city: "Los Angeles", tickets: "#" },
-    { date: "November 15, 2025", venue: "Lasagna Landing", city: "New York City", tickets: "#" },
-    { date: "December 5, 2025", venue: "Burger Basin", city: "Seattle", tickets: "#" },
-  ];
+  React.useEffect(() => {
+    const fetchShows = async () => {
+      const csvUrl = process.env.NEXT_PUBLIC_GSHEET_CSV_URL;
+      
+      if (!csvUrl) {
+        console.error("ERROR: NEXT_PUBLIC_GSHEET_CSV_URL environment variable is not set.");
+        setUpcomingShows([]);
+        return;
+      }
+
+      try {
+        console.log("Fetching shows from:", csvUrl);
+        const response = await fetch(csvUrl);
+        console.log("Fetch response status:", response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const csvText = await response.text();
+        console.log("Raw CSV text:\n", csvText);
+        const lines = csvText.trim().split('\n');
+        console.log("Split lines:", lines);
+
+        if (lines.length < 2) { // Needs at least a header and one data line
+          console.log("Not enough lines in CSV to process (header + data).");
+          setUpcomingShows([]);
+          return;
+        }
+        const headers = lines[0].split(',').map(h => h.trim());
+        console.log("CSV Headers:", headers);
+
+        const showsData = lines.slice(1).map(line => {
+          const parts = line.split(',');
+          // Explicitly define the type for showEntry to match upcomingShows state
+          const showEntry: { date: string; venue: string; city: string; tickets: string } = {
+            date: '',
+            venue: '',
+            city: '',
+            tickets: ''
+          };
+
+          if (headers.length === 4) { // Proceed only if we have the 4 expected headers
+            if (parts.length === 5) { 
+              // Assumes 5 parts means the 'date' field (headers[0]) had a comma
+              // e.g., "May 31, 2025" became "May 31" and " 2025"
+              showEntry.date = (parts[0] + ',' + parts[1]).trim().replace(/^"|"$/g, '');
+              showEntry.venue = parts[2]?.trim().replace(/^"|"$/g, '') ?? '';
+              showEntry.city = parts[3]?.trim().replace(/^"|"$/g, '') ?? '';
+              showEntry.tickets = parts[4]?.trim().replace(/^"|"$/g, '') ?? '';
+            } else if (parts.length === 4) {
+              // Assumes 4 parts means a standard row, date has no comma
+              showEntry.date = parts[0]?.trim().replace(/^"|"$/g, '') ?? '';
+              showEntry.venue = parts[1]?.trim().replace(/^"|"$/g, '') ?? '';
+              showEntry.city = parts[2]?.trim().replace(/^"|"$/g, '') ?? '';
+              showEntry.tickets = parts[3]?.trim().replace(/^"|"$/g, '') ?? '';
+            } else {
+              // Unexpected number of parts for a line
+              console.warn(`Skipping CSV line with unexpected structure: "${line}". Expected 4 or 5 parts, got ${parts.length}.`);
+              return null; // Mark for filtering
+            }
+          } else {
+            console.warn(`CSV does not have the expected 4 headers. Found: ${headers.join(', ')}`);
+            return null; // Mark for filtering
+          }
+          return showEntry;
+        }).filter((show): show is { date: string; venue: string; city: string; tickets: string } => show !== null && (!!show.date || !!show.venue || !!show.city)); 
+
+        console.log("Parsed shows data:", showsData);
+        setUpcomingShows(showsData);
+      } catch (error) {
+        console.error("Failed to fetch or parse shows:", error);
+        setUpcomingShows([]); // Set to empty or handle error appropriately
+      }
+    };
+
+    fetchShows();
+  }, []);
 
   const openModal = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -152,7 +224,7 @@ export default function HomePage() {
                 ))
               ) : (
                 <p className="text-center text-neutral-500 text-lg">
-                  No shows currently scheduled. Plotting the next caper...
+                  No shows currently scheduled. Plotting the next play...
                 </p>
               )}
             </div>
