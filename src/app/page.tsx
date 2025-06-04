@@ -2,7 +2,6 @@
 
 import Head from 'next/head';
 import Image from 'next/image';
-import Script from 'next/script';
 import React from 'react';
 import ClipsSection from '../components/ClipsSection';
 
@@ -260,7 +259,7 @@ export default function HomePage() {
           <div className="container mx-auto max-w-2xl text-center">
             <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">Connect with Me</h3>
             <p className="text-lg text-neutral-400 mb-4">
-              Keep up with me as I continue on 600 pound journey.
+              Keep up with me as I continue on my 600 pound journey.
             </p>
             <div className="flex justify-center items-center space-x-6 text-3xl">
               {/* Replace with actual social media links and icons */}
