@@ -50,12 +50,13 @@ const ClipsSection = () => {
               <div key={video.id} className="flex-none w-64 sm:w-72 md:w-80 h-80 sm:h-96 md:h-[500px] rounded-lg shadow-lg overflow-hidden snap-start">
                 <video
                   src={video.src}
+                  poster={video.src + "#t=0.5"}
                   width="100%"
                   height="100%"
                   controls
                   controlsList="nofullscreen nodownload"
                   className="object-contain w-full h-full bg-black"
-                  preload="metadata"
+                  preload="none"
                   playsInline
                 >
                   Your browser does not support the video tag.
