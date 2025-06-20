@@ -21,7 +21,7 @@ const SocialIcon = ({ href, label, children }: { href: string; label: string; ch
 export default function HomePage() {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [upcomingShows, setUpcomingShows] = React.useState<Array<{ date: string; venue: string; city: string; tickets: string }>>([]);
+  const [upcomingShows, setUpcomingShows] = React.useState<Array<{ date: string; time: string; venue: string; city: string; tickets: string }>>([]);
   const [bio, setBio] = React.useState<string>('');
 
   const comedianName = "Thomas Endashaw";
@@ -110,27 +110,29 @@ export default function HomePage() {
           console.log(`Line ${index + 2} parsed into ${parts.length} parts:`, parts);
           
           // Explicitly define the type for showEntry to match upcomingShows state
-          const showEntry: { date: string; venue: string; city: string; tickets: string } = {
+          const showEntry: { date: string; time: string; venue: string; city: string; tickets: string } = {
             date: '',
+            time: '',
             venue: '',
             city: '',
             tickets: ''
           };
 
-          if (parts.length >= 4) {
+          if (parts.length >= 5) {
             showEntry.date = parts[0] || '';
-            showEntry.venue = parts[1] || '';
-            showEntry.city = parts[2] || '';
-            showEntry.tickets = parts[3] || '';
+            showEntry.time = parts[1] || '';
+            showEntry.venue = parts[2] || '';
+            showEntry.city = parts[3] || '';
+            showEntry.tickets = parts[4] || '';
             
             console.log(`Parsed show entry:`, showEntry);
             return showEntry;
           } else {
-            console.warn(`Skipping CSV line with insufficient data: "${line}". Expected at least 4 parts, got ${parts.length}.`);
+            console.warn(`Skipping CSV line with insufficient data: "${line}". Expected at least 5 parts, got ${parts.length}.`);
             return null;
           }
-        }).filter((show): show is { date: string; venue: string; city: string; tickets: string } => 
-          show !== null && (!!show.date || !!show.venue || !!show.city)
+        }).filter((show): show is { date: string; time: string; venue: string; city: string; tickets: string } => 
+          show !== null && (!!show.date || !!show.time || !!show.venue || !!show.city)
         ); 
 
         console.log("Final parsed shows data:", showsData);
@@ -244,6 +246,7 @@ export default function HomePage() {
                   >
                     <div>
                       <p className="text-xl font-semibold text-white">{show.date}</p>
+                      <p className="text-lg text-neutral-300">{show.time}</p>
                       <p className="text-lg text-neutral-300">{show.venue}</p>
                       <p className="text-md text-neutral-400">{show.city}</p>
                     </div>
