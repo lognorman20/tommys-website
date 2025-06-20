@@ -35,6 +35,40 @@ export default function HomePage() {
     loadBio();
   }, []);
 
+  // Helper function to properly parse CSV lines that may contain quoted fields with commas
+  const parseCsvLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        // Handle escaped quotes (double quotes)
+        if (i + 1 < line.length && line[i + 1] === '"') {
+          current += '"';
+          i++; // Skip the next quote
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        // End of field
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    // Add the last field
+    result.push(current.trim());
+    
+    // Remove surrounding quotes from fields
+    return result.map(field => field.replace(/^"|"$/g, ''));
+  };
+
   React.useEffect(() => {
     const fetchShows = async () => {
       const csvUrl = process.env.NEXT_PUBLIC_GSHEET_CSV_URL;
@@ -62,11 +96,19 @@ export default function HomePage() {
           setUpcomingShows([]);
           return;
         }
-        const headers = lines[0].split(',').map(h => h.trim());
+        
+        const headers = parseCsvLine(lines[0]);
         console.log("CSV Headers:", headers);
 
-        const showsData = lines.slice(1).map(line => {
-          const parts = line.split(',');
+        const showsData = lines.slice(1).map((line, index) => {
+          if (line.trim() === '') {
+            console.log(`Skipping empty line ${index + 2}`);
+            return null;
+          }
+          
+          const parts = parseCsvLine(line);
+          console.log(`Line ${index + 2} parsed into ${parts.length} parts:`, parts);
+          
           // Explicitly define the type for showEntry to match upcomingShows state
           const showEntry: { date: string; venue: string; city: string; tickets: string } = {
             date: '',
@@ -75,33 +117,23 @@ export default function HomePage() {
             tickets: ''
           };
 
-          if (headers.length === 4) { // Proceed only if we have the 4 expected headers
-            if (parts.length === 5) { 
-              // Assumes 5 parts means the 'date' field (headers[0]) had a comma
-              // e.g., "May 31, 2025" became "May 31" and " 2025"
-              showEntry.date = (parts[0] + ',' + parts[1]).trim().replace(/^"|"$/g, '');
-              showEntry.venue = parts[2]?.trim().replace(/^"|"$/g, '') ?? '';
-              showEntry.city = parts[3]?.trim().replace(/^"|"$/g, '') ?? '';
-              showEntry.tickets = parts[4]?.trim().replace(/^"|"$/g, '') ?? '';
-            } else if (parts.length === 4) {
-              // Assumes 4 parts means a standard row, date has no comma
-              showEntry.date = parts[0]?.trim().replace(/^"|"$/g, '') ?? '';
-              showEntry.venue = parts[1]?.trim().replace(/^"|"$/g, '') ?? '';
-              showEntry.city = parts[2]?.trim().replace(/^"|"$/g, '') ?? '';
-              showEntry.tickets = parts[3]?.trim().replace(/^"|"$/g, '') ?? '';
-            } else {
-              // Unexpected number of parts for a line
-              console.warn(`Skipping CSV line with unexpected structure: "${line}". Expected 4 or 5 parts, got ${parts.length}.`);
-              return null; // Mark for filtering
-            }
+          if (parts.length >= 4) {
+            showEntry.date = parts[0] || '';
+            showEntry.venue = parts[1] || '';
+            showEntry.city = parts[2] || '';
+            showEntry.tickets = parts[3] || '';
+            
+            console.log(`Parsed show entry:`, showEntry);
+            return showEntry;
           } else {
-            console.warn(`CSV does not have the expected 4 headers. Found: ${headers.join(', ')}`);
-            return null; // Mark for filtering
+            console.warn(`Skipping CSV line with insufficient data: "${line}". Expected at least 4 parts, got ${parts.length}.`);
+            return null;
           }
-          return showEntry;
-        }).filter((show): show is { date: string; venue: string; city: string; tickets: string } => show !== null && (!!show.date || !!show.venue || !!show.city)); 
+        }).filter((show): show is { date: string; venue: string; city: string; tickets: string } => 
+          show !== null && (!!show.date || !!show.venue || !!show.city)
+        ); 
 
-        console.log("Parsed shows data:", showsData);
+        console.log("Final parsed shows data:", showsData);
         setUpcomingShows(showsData);
       } catch (error) {
         console.error("Failed to fetch or parse shows:", error);
