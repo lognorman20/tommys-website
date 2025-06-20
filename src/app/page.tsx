@@ -25,7 +25,7 @@ export default function HomePage() {
   const [bio, setBio] = React.useState<string>('');
 
   const comedianName = "Thomas Endashaw";
-  const tagline = "Finding the humor in the darkness.";
+  const tagline = "Stand-Up Comedian, Writer, Actor";
 
   React.useEffect(() => {
     const loadBio = async () => {
@@ -202,7 +202,7 @@ export default function HomePage() {
         {/* Shows Section */}
         <section id="shows" className="py-8 md:py-12 bg-black px-4">
           <div className="container mx-auto max-w-4xl">
-            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center text-white">Catch Me If You Can</h3>
+            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center text-white">Upcoming Shows</h3>
             <div className="space-y-4">
               {upcomingShows.length > 0 ? (
                 upcomingShows.map((show, index) => (
@@ -252,9 +252,6 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <p className="text-neutral-400 mt-8 text-lg">
-              More snapshots from the abyss coming soon...
-            </p>
           </div>
         </section>
 
@@ -263,7 +260,7 @@ export default function HomePage() {
           <div className="container mx-auto max-w-2xl text-center">
             <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">Connect with Me</h3>
             <p className="text-lg text-neutral-400 mb-4">
-              Keep up with me as I continue on my 600 pound journey.
+              Keep up with me as I continue on my journey.
             </p>
             <div className="flex justify-center items-center space-x-6 text-3xl">
               {/* Replace with actual social media links and icons */}
