@@ -23,8 +23,6 @@ const ClipsSection = () => {
     const handleScroll = () => {
       if (scrollContainer.scrollLeft > 0) {
         setShowScrollHint(false);
-        // Optional: Remove listener after first scroll if you only want it to hide once
-        // scrollContainer.removeEventListener('scroll', handleScroll);
       }
     };
 
@@ -33,44 +31,66 @@ const ClipsSection = () => {
     return () => {
       scrollContainer.removeEventListener('scroll', handleScroll);
     };
-  }, []); // Empty dependency array: runs once on mount and cleanup on unmount
+  }, []);
 
   return (
     <section id="clips" className="py-8 md:py-12 bg-black px-4">
       <div className="container mx-auto max-w-full">
-        <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center text-white">Clips</h3>
-        <div className="relative"> {/* Wrapper for positioning the hint */}
+        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 md:mb-8 text-center text-white">Clips</h3>
+        <div className="relative">
           <div
             ref={clipsScrollContainerRef}
-            className="flex overflow-x-auto space-x-2 pb-4 custom-horizontal-scrollbar scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-neutral-800"
+            className="flex overflow-x-auto space-x-3 md:space-x-4 pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-neutral-800"
+            style={{
+              scrollBehavior: 'smooth',
+              WebkitOverflowScrolling: 'touch'
+            }}
           >
             {shortFormVideos.map((video) => (
-              <div key={video.id} className="flex-none w-72 md:w-80 h-96 md:h-[500px] rounded-lg shadow-lg overflow-hidden isolate">
+              <div key={video.id} className="flex-none w-64 sm:w-72 md:w-80 h-80 sm:h-96 md:h-[500px] rounded-lg shadow-lg overflow-hidden snap-start">
                 <video
                   src={video.src}
                   width="100%"
                   height="100%"
                   controls
-                  controlsList="nofullscreen"
-                  className="object-contain w-full h-full"
+                  controlsList="nofullscreen nodownload"
+                  className="object-contain w-full h-full bg-black"
+                  preload="metadata"
+                  playsInline
                 >
                   Your browser does not support the video tag.
                 </video>
               </div>
             ))}
           </div>
+          
+          {/* Desktop scroll hint */}
           {shortFormVideos.length > 0 && showScrollHint && (
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none hidden md:flex items-center bg-black bg-opacity-50 p-2 rounded">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-neutral-300 animate-pulse">
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none hidden lg:flex items-center bg-black bg-opacity-60 p-3 rounded-lg backdrop-blur-sm">
+              <span className="text-neutral-300 text-sm mr-2">Scroll</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-neutral-300 animate-pulse">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </div>
+          )}
+
+          {/* Mobile swipe hint */}
+          {shortFormVideos.length > 0 && showScrollHint && (
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none flex lg:hidden items-center bg-black bg-opacity-60 px-3 py-2 rounded-full backdrop-blur-sm">
+              <span className="text-neutral-300 text-xs mr-2">Swipe</span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 text-neutral-300 animate-pulse">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </div>
           )}
         </div>
+        
         {shortFormVideos.length === 0 && (
-          <p className="text-center text-neutral-500 text-lg">
-            No short clips right now, probably busy eating.
-          </p>
+          <div className="text-center py-8">
+            <p className="text-neutral-500 text-base md:text-lg">
+              No short clips right now, probably busy eating.
+            </p>
+          </div>
         )}
       </div>
     </section>
