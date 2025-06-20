@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import React from 'react';
 import ClipsSection from '../components/ClipsSection';
+import { getBio } from '../data/bio';
 
 const SocialIcon = ({ href, label, children }: { href: string; label: string; children: React.ReactNode }) => (
   <a
@@ -21,19 +22,18 @@ export default function HomePage() {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [upcomingShows, setUpcomingShows] = React.useState<Array<{ date: string; venue: string; city: string; tickets: string }>>([]);
+  const [bio, setBio] = React.useState<string>('');
 
   const comedianName = "Thomas Endashaw";
   const tagline = "Finding the humor in the darkness.";
-  const bio = `Meet ${comedianName.split(' ')[0]}, a senior at the University of Southern California majoring in Business of Cinematic Arts, who's
-  never far from a snack and somehow always manages to be both well-fed and
-  hungry. Born and raised in Seattle, he brought his appetite to LA's comedy
-  scene, where he now serves jokes—and devours post-show street tacos—as the
-  youngest door guy at the Comedy Store. A follower of Jesus Christ, Thomas
-  blends his faith with humor the same way he mixes cuisines: daily and in
-  large portions. Mid-punchline, he's probably thinking about his next
-  meal, and his friends know that any hangout with him requires at least a 50 piece box of wings.
-  If laughter is the best medicine, Thomas proves it works better with fries on
-  the side.`;
+
+  React.useEffect(() => {
+    const loadBio = async () => {
+      const bioText = await getBio();
+      setBio(bioText);
+    };
+    loadBio();
+  }, []);
 
   React.useEffect(() => {
     const fetchShows = async () => {
@@ -184,11 +184,15 @@ export default function HomePage() {
 
         {/* About Section */}
         <section id="about-me" className="py-8 md:py-12 bg-black px-4">
-          <div className="container mx-auto max-w-3xl text-center">
-            <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">About Me</h3>
-            <p className="text-lg md:text-xl text-neutral-400 leading-relaxed">
-              {bio}
-            </p>
+          <div className="container mx-auto max-w-3xl">
+            <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white text-center">About Me</h3>
+            <div className="space-y-6 text-lg md:text-xl text-neutral-400 leading-relaxed text-left">
+              {bio.split('\n\n').map((paragraph, index) => (
+                <p key={index}>
+                  {paragraph}
+                </p>
+              ))}
+            </div>
           </div>
         </section>
 
