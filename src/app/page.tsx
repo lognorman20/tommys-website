@@ -431,7 +431,7 @@ export default function HomePage() {
           <div className="container mx-auto max-w-2xl text-center">
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6 text-white">Connect with Me</h3>
             <p className="text-base md:text-lg text-neutral-400 mb-6 md:mb-8">
-              Keep up with me as I continue on my journey.
+              Direct message or email for booking inquiries.
             </p>
             <div className="flex justify-center items-center space-x-4 md:space-x-6">
               {/* Replace with actual social media links and icons */}
