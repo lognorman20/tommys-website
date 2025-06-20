@@ -254,36 +254,50 @@ export default function HomePage() {
 
         {/* Shows Section */}
         <section id="shows" className="py-8 md:py-12 bg-black px-4">
-          <div className="container mx-auto max-w-4xl">
-            <h3 className="text-3xl md:text-4xl font-bold mb-6 text-center text-white">Upcoming Shows</h3>
-            <div className="space-y-4">
-              {upcomingShows.length > 0 ? (
-                upcomingShows.map((show, index) => (
-                  <div
-                    key={index}
-                    className="bg-black p-6 rounded-lg shadow-lg flex flex-col md:flex-row justify-between items-center transition-all duration-300"
-                  >
-                    <div>
-                      <p className="text-xl font-semibold text-white">{show.date}</p>
-                      <p className="text-lg text-neutral-300">{show.time}</p>
-                      <p className="text-lg text-neutral-300">{show.venue}</p>
-                      <p className="text-md text-neutral-400">{show.city}</p>
-                    </div>
-                    <a
-                      href={show.tickets}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 md:mt-0 bg-white hover:bg-neutral-200 text-black font-bold py-2 px-6 rounded-md transition-colors duration-300 shadow-sm hover:shadow-md"
-                    >
-                      Tickets
-                    </a>
-                  </div>
-                ))
-              ) : (
-                <p className="text-center text-neutral-500 text-lg">
-                  No shows currently scheduled. Plotting the next play...
-                </p>
-              )}
+          <div className="container mx-auto max-w-6xl">
+            <h3 className="text-3xl md:text-4xl font-bold mb-8 text-center text-white">Upcoming Shows</h3>
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+              <div className="w-full lg:w-1/3 lg:sticky top-24">
+                <Image
+                  src="/upcoming_shows.jpg"
+                  alt="Thomas Endashaw upcoming shows"
+                  layout="responsive"
+                  width={2}
+                  height={3}
+                  className="rounded-lg shadow-lg"
+                />
+              </div>
+              <div className="w-full lg:w-2/3">
+                <div className="space-y-4">
+                  {upcomingShows.length > 0 ? (
+                    upcomingShows.map((show, index) => (
+                      <div
+                        key={index}
+                        className="bg-black p-6 rounded-lg shadow-lg flex flex-col md:flex-row justify-between items-center transition-all duration-300"
+                      >
+                        <div>
+                          <p className="text-xl font-semibold text-white">{show.date}</p>
+                          <p className="text-lg text-neutral-300">{show.time}</p>
+                          <p className="text-lg text-neutral-300">{show.venue}</p>
+                          <p className="text-md text-neutral-400">{show.city}</p>
+                        </div>
+                        <a
+                          href={show.tickets}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-4 md:mt-0 bg-white hover:bg-neutral-200 text-black font-bold py-2 px-6 rounded-md transition-colors duration-300 shadow-sm hover:shadow-md"
+                        >
+                          Tickets
+                        </a>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-center text-neutral-500 text-lg">
+                      No shows currently scheduled. Plotting the next play...
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </section>
