@@ -220,10 +220,22 @@ export default function HomePage() {
         <section id="about-me" className="py-8 md:py-12 bg-black px-4">
           <div className="container mx-auto max-w-5xl">
             <h3 className="text-3xl md:text-4xl font-bold mb-8 text-white text-center">About</h3>
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center">
+            
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
+              {/* About Text */}
+              <div className="w-full lg:w-2/3 flex">
+                <div className="space-y-6 text-lg md:text-xl text-neutral-400 leading-relaxed text-left flex flex-col justify-center">
+                  {bio.split('\n\n').map((paragraph, index) => (
+                    <p key={index}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              
               {/* About Image */}
               <div className="w-full lg:w-1/3 flex-shrink-0">
-                <div className="aspect-square lg:aspect-[3/4] relative overflow-hidden rounded-lg shadow-lg">
+                <div className="h-full relative overflow-hidden rounded-lg shadow-lg">
                   <Image
                     src="/about.jpeg"
                     alt="Thomas Endashaw"
@@ -231,17 +243,6 @@ export default function HomePage() {
                     objectFit="cover"
                     className="hover:scale-105 transition-transform duration-300"
                   />
-                </div>
-              </div>
-              
-              {/* About Text */}
-              <div className="w-full lg:w-2/3">
-                <div className="space-y-6 text-lg md:text-xl text-neutral-400 leading-relaxed text-left">
-                  {bio.split('\n\n').map((paragraph, index) => (
-                    <p key={index}>
-                      {paragraph}
-                    </p>
-                  ))}
                 </div>
               </div>
             </div>
