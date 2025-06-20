@@ -2,6 +2,8 @@
 
 A basic website for my bruva
 
+https://github.com/user-attachments/assets/1b5ec48b-a46b-434e-a540-65d0ba5c871e
+
 ## Getting Started
 
 First, run the development server:
