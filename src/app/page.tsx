@@ -285,6 +285,7 @@ export default function HomePage() {
                     alt="Thomas Endashaw"
                     layout="fill"
                     objectFit="cover"
+                    objectPosition="center top"
                     className="hover:scale-105 transition-transform duration-300"
                   />
                 </div>
