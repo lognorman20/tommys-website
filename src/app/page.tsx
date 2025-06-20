@@ -137,7 +137,57 @@ export default function HomePage() {
         ); 
 
         console.log("Final parsed shows data:", showsData);
-        setUpcomingShows(showsData);
+        
+        // Filter out past dates and sort by date
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Reset time to start of day for comparison
+        
+        const filteredAndSortedShows = showsData
+          .filter(show => {
+            if (!show.date) return false;
+            
+            // Try to parse the date - handle various date formats
+            const showDate = new Date(show.date);
+            
+            // If parsing failed, try other common formats
+            if (isNaN(showDate.getTime())) {
+              // Try MM/DD/YYYY format
+              const parts = show.date.split('/');
+              if (parts.length === 3) {
+                const [month, day, year] = parts;
+                const parsedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                return parsedDate >= currentDate;
+              }
+              
+              // Try DD/MM/YYYY format
+              if (parts.length === 3) {
+                const [day, month, year] = parts;
+                const parsedDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                return parsedDate >= currentDate;
+              }
+              
+              // If all parsing attempts fail, keep the show (better to show than hide)
+              console.warn(`Could not parse date: ${show.date}`);
+              return true;
+            }
+            
+            return showDate >= currentDate;
+          })
+          .sort((a, b) => {
+            // Sort by date (earliest first)
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            
+            // Handle parsing failures by treating them as far future dates
+            if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
+            if (isNaN(dateA.getTime())) return 1;
+            if (isNaN(dateB.getTime())) return -1;
+            
+            return dateA.getTime() - dateB.getTime();
+          });
+        
+        console.log("Filtered and sorted shows:", filteredAndSortedShows);
+        setUpcomingShows(filteredAndSortedShows);
       } catch (error) {
         console.error("Failed to fetch or parse shows:", error);
         setUpcomingShows([]); // Set to empty or handle error appropriately
